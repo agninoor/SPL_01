@@ -21,6 +21,7 @@ const partials_path = path.join(__dirname, "../templates/partials");
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;
 
+
 //session middleware
 app.use(
   sessions({
@@ -37,8 +38,12 @@ app.use(cookieParser());
 
 app.use(express.static(static_path));
 app.set("view engine", "hbs");
+
+
 app.set("views", template_path);
 hbs.registerPartials(partials_path);
+
+
 
 app.get("/", (req, res) => {
   res.render("index");
@@ -75,6 +80,19 @@ app.get("/quizname", (req, res) => {
 app.get("/searchquiz", (req, res) => {
   res.render("searchquiz");
 });
+app.get("/dashboard", (req, res) => {
+    const session = req.session;
+    if(session.username == undefined){
+        res.status(201).render("login");
+    }else{
+
+        
+        res.status(201).render("dashboard", {
+            userName: session.username,
+          });
+    }
+  
+});
 app.get("/getquiz/:creatorname/:quizname", (req, res) => {
   console.log(req.params);
   const creator = req.params.creatorname;
@@ -94,8 +112,8 @@ app.get("/getquiz/:creatorname/:quizname", (req, res) => {
 app.post("/quiz1", async (req, res) => {
   try {
     const makeQuiz = new Quizone({
-      creator: global.userName,
-      quizname: global.quizName,
+      creator: req.session.username,
+      quizname: req.session.quizname,
       question: req.body.question,
       a: req.body.a,
       b: req.body.b,
@@ -134,7 +152,7 @@ app.post("/quizname", async (req, res) => {
       quizname: req.body.quizname,
     });
     const quizMade = await makeQuiz.save();
-    global.quizName = req.body.quizname;
+    req.session.quizname = req.body.quizname;
 
     res.status(201).render("quiz1");
   } catch (error) {
@@ -168,7 +186,7 @@ app.post("/registration", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const username = req.body.username;
-    global.userName = username;
+    
     const password = req.body.password;
     const emailid = req.body.emailid;
 
@@ -176,7 +194,7 @@ app.post("/login", async (req, res) => {
 
     if (findName.password === password && findName.emailid == emailid) {
       const session = req.session;
-      session.username = userName;
+      session.username = username;
       console.log(req.session);
 
       res.status(201).render("dashboard", {
