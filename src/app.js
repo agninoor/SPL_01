@@ -72,6 +72,9 @@ app.get("/manual", (req, res) => {
 app.get("/quizname", (req, res) => {
   res.render("quizname");
 });
+app.get("/searchquiz", (req, res) => {
+  res.render("searchquiz");
+});
 app.get("/getquiz/:creatorname/:quizname", (req, res) => {
 	console.log(req.params);
   const creator = req.params.creatorname;
@@ -182,6 +185,16 @@ app.post("/login", async (req, res) => {
     } else {
       res.send("invalid login details");
     }
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+app.post("/getquiz", async (req, res) => {
+  try {
+    const quizname = req.body.quizname;
+    const creator = req.body.creator;
+    console.log(quizname,creator);
+    
   } catch (error) {
     res.status(400).send(error);
   }
