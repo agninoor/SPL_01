@@ -76,7 +76,7 @@ app.get("/searchquiz", (req, res) => {
   res.render("searchquiz");
 });
 app.get("/getquiz/:creatorname/:quizname", (req, res) => {
-	console.log(req.params);
+  console.log(req.params);
   const creator = req.params.creatorname;
   const quizName = req.params.quizname;
   let quizdata = Quizone.find(
@@ -193,8 +193,16 @@ app.post("/getquiz", async (req, res) => {
   try {
     const quizname = req.body.quizname;
     const creator = req.body.creator;
-    console.log(quizname,creator);
-    
+    const info = {
+      quizname: quizname,
+      creator: creator,
+    };
+    console.log(quizname, creator);
+    res
+      .status(200)
+      .render("showquiz", {
+        encodedJson: encodeURIComponent(JSON.stringify(info)),
+      });
   } catch (error) {
     res.status(400).send(error);
   }
