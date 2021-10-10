@@ -99,18 +99,18 @@ body {
 
 .form input {
   width: 100%;
-  height: 50px;
+  height: 35px;
   font-family: var(--ff-secondary);
   outline: var(--clr-primary-6) solid 5px;
   background: white;
   padding: 2px 2px 2px 2px;
-  font-size: 20px;
+  font-size: 15px;
   text-align: center;
 }
 #submit {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   border: 0;
-  padding: 15px;
+  padding: 10px;
   width: 100%;
   font-weight: bold;
   color: white;

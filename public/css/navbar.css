@@ -161,10 +161,7 @@ nav {
   box-shadow: var(--light-shadow);
 }
 .nav-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
+  color: #222;
 }
 
 .links a {

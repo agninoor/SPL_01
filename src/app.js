@@ -9,7 +9,9 @@ const port = process.env.PORT || 3000;
 require("./db/conn");
 
 const Register = require("./models/registers");
-const Quiz = require("./models/quiz");
+const Quizone = require("./models/quiz1");
+const Quiztwo = require("./models/quiz2");
+const Quizname = require("./models/quizname");
 
 const static_path = path.join(__dirname, "../public") ;
 const template_path = path.join(__dirname,"../templates/views");
@@ -40,19 +42,92 @@ app.get("/makequiz",(req,res)=>{
     res.render("makequiz");
 
 })
+app.get("/showquiz",(req,res)=>{
+    res.render("showquiz");
 
-app.post("/makequiz",async(req,res)=>{
+})
+app.get("/templateview",(req,res)=>{
+    res.render("templateview");
+
+})
+app.get("/quiz1",(req,res)=>{
+    res.render("quiz1");
+
+})
+app.get("/quiz2",(req,res)=>{
+    res.render("quiz2");
+
+})
+app.get("/manual",(req,res)=>{
+    res.render("manual");
+
+})
+app.get("/quizname",(req,res)=>{
+    res.render("quizname");
+
+})
+app.get("/quizdata",(req,res)=>{
+    let quizdata = Quizone.find({creator:'agninoor',quizname:'notquiz'}, function(err, posts){
+        if(err){
+            console.log(err);
+        }
+        else {
+            res.json(posts);
+        }
+    });
+
+})
+
+app.post("/quiz1",async(req,res)=>{
    
     try {
-        const makeQuiz = new Quiz({
+        const makeQuiz = new Quizone({
+            creator: global.userName,
+            quizname:global.quizName,
             question: req.body.question,
             a:req.body.a,
             b:req.body.b,
-            testArray:req.body.c,
+           c:req.body.c,
+           d:req.body.d,
             correct: req.body.correct
         })
         const quizMade = await makeQuiz.save();
-        res.status(201).render(makeQuiz);
+        res.status(201).render("quiz1");
+        
+    } catch (error) {
+        res.status(400).send(error);
+    }
+})
+app.post("/quiz2",async(req,res)=>{
+   
+    try {
+        const makeQuiz = new Quiztwo({
+            question: req.body.question,
+            marks:req.body.marks,
+            a:req.body.a,
+            b:req.body.b,
+            c:req.body.c,
+            d: req.body.d,
+            correct: req.body.correct
+        })
+        const quizMade = await makeQuiz.save();
+        res.status(201).render("quiz2");
+        
+    } catch (error) {
+        res.status(400).send(error);
+    }
+})
+app.post("/quizname",async(req,res)=>{
+   
+    try {
+        const makeQuiz = new Quizname({
+            creator:req.body.creator,
+            quizname:req.body.quizname
+        })
+        const quizMade = await makeQuiz.save();
+        global.quizName = req.body.quizname;
+        
+        res.status(201).render("quiz1");
         
     } catch (error) {
         res.status(400).send(error);
@@ -92,6 +167,7 @@ app.post("/registration", async(req,res)=>{
 app.post("/login", async(req,res)=>{
     try{
     const username = req.body.username;
+    global.userName = username;
     const password = req.body.password;
     const emailid = req.body.emailid;
 
