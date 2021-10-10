@@ -45,17 +45,21 @@ const submitBtn = document.getElementById("submit");
 let currentQuiz = 0;
 let score = 0;
 
-fetch("/getquiz/noman/abcd")
-  .then((response) => response.json())
-  .then((data) => {
-    window.quizData = data;
-	loadQuiz();
-  })
-  .catch((err) => console.log(err));
+function getQuestionsFromDB(info) {
+  const creator = info.creator;
+  const quizname = info.quizname;
+  fetch(`/getquiz/${creator}/${quizname}`)
+    .then((response) => response.json())
+    .then((data) => {
+      window.quizData = data;
+      loadQuiz();
+    })
+    .catch((err) => console.log(err));
+}
 
 function loadQuiz() {
   deselectAnswers();
-	quizData = window.quizData;
+  quizData = window.quizData;
   const currentQuizData = quizData[currentQuiz];
 
   questionEl.innerText = currentQuizData.question;
