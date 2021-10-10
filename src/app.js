@@ -72,9 +72,12 @@ app.get("/manual", (req, res) => {
 app.get("/quizname", (req, res) => {
   res.render("quizname");
 });
-app.get("/quizdata", (req, res) => {
+app.get("/getquiz/:creatorname/:quizname", (req, res) => {
+	console.log(req.params);
+  const creator = req.params.creatorname;
+  const quizName = req.params.quizname;
   let quizdata = Quizone.find(
-    { creator: "agninoor", quizname: "notquiz" },
+    { creator: creator, quizname: quizName },
     function (err, posts) {
       if (err) {
         console.log(err);
@@ -121,7 +124,7 @@ app.post("/quiz2", async (req, res) => {
   }
 });
 app.post("/quizname", async (req, res) => {
-	console.log(req.session.username);
+  console.log(req.session);
   try {
     const makeQuiz = new Quizname({
       creator: req.body.creator,

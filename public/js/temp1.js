@@ -1,36 +1,36 @@
-const quizData = [
-    {
-        question: "What is the most used programming language in 2019?",
-        a: "Java",
-        b: "C",
-        c: "Python",
-        d: "JavaScript",
-        correct: "d",
-    },
-    {
-        question: "Who is the President of US?",
-        a: "Florin Pop",
-        b: "Donald Trump",
-        c: "Ivan Saldano",
-        d: "Mihai Andrei",
-        correct: "b",
-    },
-    {
-        question: "What does HTML stand for?",
-        a: "Hypertext Markup Language",
-        b: "Cascading Style Sheet",
-        c: "Jason Object Notation",
-        d: "Helicopters Terminals Motorboats Lamborginis",
-        correct: "a",
-    },
-    {
-        question: "What year was JavaScript launched?",
-        a: "1996",
-        b: "1995",
-        c: "1994",
-        d: "none of the above",
-        correct: "b",
-    },
+let quizData = [
+  {
+    question: "What is the most used programming language in 2019?",
+    a: "Java",
+    b: "C",
+    c: "Python",
+    d: "JavaScript",
+    correct: "d",
+  },
+  {
+    question: "Who is the President of US?",
+    a: "Florin Pop",
+    b: "Donald Trump",
+    c: "Ivan Saldano",
+    d: "Mihai Andrei",
+    correct: "b",
+  },
+  {
+    question: "What does HTML stand for?",
+    a: "Hypertext Markup Language",
+    b: "Cascading Style Sheet",
+    c: "Jason Object Notation",
+    d: "Helicopters Terminals Motorboats Lamborginis",
+    correct: "a",
+  },
+  {
+    question: "What year was JavaScript launched?",
+    a: "1996",
+    b: "1995",
+    c: "1994",
+    d: "none of the above",
+    correct: "b",
+  },
 ];
 
 const quiz = document.getElementById("quiz");
@@ -45,56 +45,62 @@ const submitBtn = document.getElementById("submit");
 let currentQuiz = 0;
 let score = 0;
 
-loadQuiz();
+fetch("/getquiz/noman/abcd")
+  .then((response) => response.json())
+  .then((data) => {
+    window.quizData = data;
+	loadQuiz();
+  })
+  .catch((err) => console.log(err));
 
 function loadQuiz() {
-    deselectAnswers();
+  deselectAnswers();
+	quizData = window.quizData;
+  const currentQuizData = quizData[currentQuiz];
 
-    const currentQuizData = quizData[currentQuiz];
-
-    questionEl.innerText = currentQuizData.question;
-    a_text.innerText = currentQuizData.a;
-    b_text.innerText = currentQuizData.b;
-    c_text.innerText = currentQuizData.c;
-    d_text.innerText = currentQuizData.d;
+  questionEl.innerText = currentQuizData.question;
+  a_text.innerText = currentQuizData.a;
+  b_text.innerText = currentQuizData.b;
+  c_text.innerText = currentQuizData.c;
+  d_text.innerText = currentQuizData.d;
 }
 
 function getSelected() {
-    let answer = undefined;
+  let answer = undefined;
 
-    answerEls.forEach((answerEl) => {
-        if (answerEl.checked) {
-            answer = answerEl.id;
-        }
-    });
+  answerEls.forEach((answerEl) => {
+    if (answerEl.checked) {
+      answer = answerEl.id;
+    }
+  });
 
-    return answer;
+  return answer;
 }
 
 function deselectAnswers() {
-    answerEls.forEach((answerEl) => {
-        answerEl.checked = false;
-    });
+  answerEls.forEach((answerEl) => {
+    answerEl.checked = false;
+  });
 }
 
 submitBtn.addEventListener("click", () => {
-    // check to see the answer
-    const answer = getSelected();
+  // check to see the answer
+  const answer = getSelected();
 
-    if (answer) {
-        if (answer === quizData[currentQuiz].correct) {
-            score++;
-        }
+  if (answer) {
+    if (answer === quizData[currentQuiz].correct) {
+      score++;
+    }
 
-        currentQuiz++;
-        if (currentQuiz < quizData.length) {
-            loadQuiz();
-        } else {
-            quiz.innerHTML = `
+    currentQuiz++;
+    if (currentQuiz < quizData.length) {
+      loadQuiz();
+    } else {
+      quiz.innerHTML = `
                 <h2>You answered correctly at ${score}/${quizData.length} questions.</h2>
                 
                 <button onclick="location.reload()">Reload</button>
             `;
-        }
     }
+  }
 });
