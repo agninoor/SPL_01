@@ -7,6 +7,24 @@
     <title>Navbar</title>
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
+    <script>
+		var decodedJson = decodeURIComponent("{{{encodedJson}}}");
+		var info = JSON.parse(decodedJson);
+
+		function getQuestionsFromDB(info) {
+			const creator = info.creator;
+			
+			fetch(`/getuserquizzes/${creator}`)
+				.then((response) => response.json())
+				.then((data) => {
+					console.log(data);
+					
+				})
+				.catch((err) => console.log(err));
+		}
+
+		getQuestionsFromDB(info);
+	</script>
 
     <!-- styles -->
     <link rel="stylesheet" href="css/navbar.css" />

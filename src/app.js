@@ -85,10 +85,16 @@ app.get("/dashboard", (req, res) => {
     if(session.username == undefined){
         res.status(201).render("login");
     }else{
-
+        
+    const creator = req.session.username;
+    const info = {
+      
+    creator: creator,
+    };
         
         res.status(201).render("dashboard", {
             userName: session.username,
+            encodedJson: encodeURIComponent(JSON.stringify(info))
           });
     }
   
@@ -108,6 +114,20 @@ app.get("/getquiz/:creatorname/:quizname", (req, res) => {
     }
   );
 });
+app.get("/getuserquizzes/:creatorname",(req,res)=>{
+    const creatorname = req.params.creatorname;
+    let userquizzes = Quizname.find(
+    { creator: creatorname },
+    function (err, posts) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(posts);
+      }
+    }
+  );
+
+})
 
 app.post("/quiz1", async (req, res) => {
   try {
