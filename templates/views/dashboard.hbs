@@ -18,12 +18,21 @@
 				.then((response) => response.json())
 				.then((data) => {
 					console.log(data);
+                    makeUserLink(data);
 					
 				})
 				.catch((err) => console.log(err));
 		}
 
 		getQuestionsFromDB(info);
+        function makeUserLink(data){
+
+        const links = document.getElementById("links");
+        for(i=0;i<data.length;i++){
+            links.innerHTML+= `<h1 class="quizname">${data[i].quizname}</h1>`
+        }
+        }
+        
 	</script>
 
     <!-- styles -->
@@ -65,6 +74,9 @@
 
 
     </nav>
+    <div id="links">
+
+    </div>
     
     <!-- javascript -->
     

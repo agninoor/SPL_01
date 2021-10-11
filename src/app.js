@@ -21,7 +21,6 @@ const partials_path = path.join(__dirname, "../templates/partials");
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;
 
-
 //session middleware
 app.use(
   sessions({
@@ -39,11 +38,8 @@ app.use(cookieParser());
 app.use(express.static(static_path));
 app.set("view engine", "hbs");
 
-
 app.set("views", template_path);
 hbs.registerPartials(partials_path);
-
-
 
 app.get("/", (req, res) => {
   res.render("index");
@@ -81,23 +77,20 @@ app.get("/searchquiz", (req, res) => {
   res.render("searchquiz");
 });
 app.get("/dashboard", (req, res) => {
-    const session = req.session;
-    if(session.username == undefined){
-        res.status(201).render("login");
-    }else{
-        
+  const session = req.session;
+  if (session.username == undefined) {
+    res.status(201).render("login");
+  } else {
     const creator = req.session.username;
     const info = {
-      
-    creator: creator,
+      creator: creator,
     };
-        
-        res.status(201).render("dashboard", {
-            userName: session.username,
-            encodedJson: encodeURIComponent(JSON.stringify(info))
-          });
-    }
-  
+
+    res.status(201).render("dashboard", {
+      userName: session.username,
+      encodedJson: encodeURIComponent(JSON.stringify(info)),
+    });
+  }
 });
 app.get("/getquiz/:creatorname/:quizname", (req, res) => {
   console.log(req.params);
@@ -114,9 +107,9 @@ app.get("/getquiz/:creatorname/:quizname", (req, res) => {
     }
   );
 });
-app.get("/getuserquizzes/:creatorname",(req,res)=>{
-    const creatorname = req.params.creatorname;
-    let userquizzes = Quizname.find(
+app.get("/getuserquizzes/:creatorname", (req, res) => {
+  const creatorname = req.params.creatorname;
+  let userquizzes = Quizname.find(
     { creator: creatorname },
     function (err, posts) {
       if (err) {
@@ -126,8 +119,7 @@ app.get("/getuserquizzes/:creatorname",(req,res)=>{
       }
     }
   );
-
-})
+});
 
 app.post("/quiz1", async (req, res) => {
   try {
@@ -206,7 +198,7 @@ app.post("/registration", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const username = req.body.username;
-    
+
     const password = req.body.password;
     const emailid = req.body.emailid;
 
@@ -216,9 +208,14 @@ app.post("/login", async (req, res) => {
       const session = req.session;
       session.username = username;
       console.log(req.session);
+      const creator = req.session.username;
+      const info = {
+        creator: creator,
+      };
 
       res.status(201).render("dashboard", {
-        userName: username,
+        userName: session.username,
+        encodedJson: encodeURIComponent(JSON.stringify(info)),
       });
     } else {
       res.send("invalid login details");
@@ -236,11 +233,9 @@ app.post("/getquiz", async (req, res) => {
       creator: creator,
     };
     console.log(quizname, creator);
-    res
-      .status(200)
-      .render("showquiz", {
-        encodedJson: encodeURIComponent(JSON.stringify(info)),
-      });
+    res.status(200).render("showquiz", {
+      encodedJson: encodeURIComponent(JSON.stringify(info)),
+    });
   } catch (error) {
     res.status(400).send(error);
   }
